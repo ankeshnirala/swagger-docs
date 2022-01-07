@@ -1,0 +1,198 @@
+openapi: 3.0.0
+info:
+  title: Node Documentation
+  description: Node, Express, Swagger documentation
+  version: 1.0.0
+  contact:
+    email: ankeshnirala@gmail.com
+    url: http://127.0.0.1:4000/
+
+servers:
+  - url: "{protocol}://localhost:4000/api/{version}"
+    description: development server
+    variables:
+      version:
+        enum:
+          - v1
+          - v2
+        default: v1
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+    BearerAuth:
+      type: http
+      scheme: bearer
+
+paths:
+  /lco:
+    get:
+      tags:
+        - String
+      summary: returns a greet message from lco
+      responses:
+        200:
+          description: all good and success
+          content:
+            application/json:
+              schema:
+                type: string
+                example: "mystring"
+        400:
+          description: Bad Request
+        500:
+        description: Internal Server Error
+  /lco/course/{courseId}:
+    get:
+      tags:
+        - Courses
+      summary: return a course based on request id
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          default: 22
+          schema:
+            type: string
+      responses:
+        200:
+          description: all good success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  price:
+                    type: string
+        400:
+          description: Bad Request
+        500:
+        description: Internal Server Error
+  /lco/courses:
+    get:
+      tags:
+        - Courses
+      summary: return all courses
+      responses:
+        200:
+          description: all good success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
+                    price:
+                      type: string
+        400:
+          description: Bad Request
+        500:
+        description: Internal Server Error
+  /lco/addCourse:
+    post:
+      tags:
+        - Courses
+      summary: add a new course to existing courses
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: string
+                name:
+                  type: string
+                price:
+                  type: string
+      responses:
+        200:
+          description: all good success
+          content:
+            application/json:
+              schema:
+                type: boolean
+        400:
+          description: Bad Request
+        500:
+        description: Internal Server Error
+  /lco/courseQuery:
+    get:
+      tags:
+        - Courses
+      summary: trying to learn about query
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [delhi, london, patna]
+        - name: device
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [web, mobile]
+      responses:
+        200:
+          description: all good success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  value:
+                    type: string
+        400:
+          description: Bad Request
+        500:
+        description: Internal Server Error
+  /lco/courseUpload:
+    post:
+      tags:
+        - Courses
+      summary: uploading course image
+      parameters:
+        - in: header
+          name: auth
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        200:
+          description: all good success
+        400:
+          description: Bad Request
+        500:
+        description: Internal Server Error
